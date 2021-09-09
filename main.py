@@ -18,4 +18,18 @@ with driver:
   submit_login = driver.find_element(By.XPATH, '/html/body/div[1]/div/div[3]/div/div[4]/div')
   submit_login.click()
 
-  time.sleep(1) # sleep for 1 second
+  time.sleep(3) # sleep for 3 second
+  try:
+    button_identidade = driver.find_element(By.ID, 'remindLater')
+    button_identidade.click()
+  except:
+    print('Não possui modal de verificação de identidade')
+  
+  time.sleep(3) # sleep for 3 second
+  try:
+    button_novas_mensagens = driver.find_element(By.XPATH, '/html/body/div[6]/div[4]')
+    button_novas_mensagens.click()
+  except:
+    print('Não possui modal de verificação de novas_mensagens')
+
+  time.sleep(2) # sleep for 2 second
