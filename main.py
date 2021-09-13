@@ -28,6 +28,15 @@ def closeModalIdenty(driver, by):
   except:
     print("closeModalIdenty >>> error")
 
+def closeModalEmail(driver, by):
+  try: 
+    time.sleep(10) # sleep for 10 second
+    driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
+    driver.find_element(by, '//*[@id="RemindMeLater"]').click()
+
+    driver.switch_to.default_content()
+  except:
+    print("closeModalEmail >>> error")
 
 
 driver = uc.Chrome()
@@ -45,6 +54,9 @@ with driver:
 
   findAndclick(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div/div[4]/div', 'Click no submit do login')
 
+  #fechando modal/iframe email secundario
+  closeModalEmail(driver, By.XPATH)
+  
   #fechando modal/iframe de confirmacao de identidade
   closeModalIdenty(driver, By.XPATH)
   
