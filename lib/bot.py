@@ -90,7 +90,3 @@ def toBet(bet):
     return True
   except:
     return False
-
-
-def teste():
-  print('aaaaaa')
