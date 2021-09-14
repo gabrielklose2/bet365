@@ -1,13 +1,24 @@
 import time
+import os
 import undetected_chromedriver.v2 as uc
 from selenium.webdriver.common.by import By
 
-def findAndclick(dri,by, paramBy, error):
+def findAndclick(dri,by, paramBy, error, final_bet = False, user = '', bet = ''):
   try: 
     time.sleep(1) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.click()
+    if(final_bet):
+      file = open(os.path.abspath("")+"/log.txt", "w")
+      file.write("Success : "+ user + " - " + bet + "\n")
+      time.sleep(1)
+      file.close()
   except:
+    if(final_bet):
+      file = open(os.path.abspath("")+"/log.txt", "w")
+      file.write("Error : "+ user + " - " + bet + "\n")
+      time.sleep(1)
+      file.close()
     print(error)
 
 def findAndInputData(dri,by, paramBy, data, error):
@@ -79,18 +90,20 @@ def toBet(bet):
     findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
     
     #inserindo o valor da aposta
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'Error >> inserindo valor da aposta')
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'Error >> inserindo valor da aposta1')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta2')
     
-    #clicando no icone de perfil
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-MainHeaderMembersWide_MembersMenuIcon")]', 'Error >> Click no perfil')
+    # #clicando no icone de perfil
+    # findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-MainHeaderMembersWide_MembersMenuIcon")]', 'Error >> Click no perfil')
     
-    #logout
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "ul-MembersLinkButton_Text")]', 'Error >> Click no perfil')
+    # #logout
+    # findAndclick(driver, By.XPATH, '//div[contains(@class, "ul-MembersLinkButton_Text")]', 'Error >> Click no perfil')
+    
     #clicando em fazer aposta
-    # findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta')
-    print('aposta feita')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    # print('aposta feita')
     driver.quit()
     return True
   except:
+    driver.quit()
     return False
