@@ -82,9 +82,14 @@ def toBet(bet):
     findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'Error >> inserindo valor da aposta')
     findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta')
     
+    #clicando no icone de perfil
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-MainHeaderMembersWide_MembersMenuIcon")]', 'Error >> Click no perfil')
+    
+    #logout
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "ul-MembersLinkButton_Text")]', 'Error >> Click no perfil')
     #clicando em fazer aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta')
-    # print('aposta feita')
+    # findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta')
+    print('aposta feita')
     driver.quit()
     return True
   except:
