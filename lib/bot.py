@@ -43,18 +43,18 @@ def closeModalEmail(driver, by):
 
 def toBet(bet):
   driver = uc.Chrome()
-  with driver:
+  try:
 
-    driver.get('https://www.bet365.com') 
+    driver.get('https://www.bet365.com/#/HO/') 
     time.sleep(3) # sleep for 3 second
-    findAndclick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Click no botão login')
+    findAndclick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
 
     # set username
-    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Digitando username')    
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Error >> Digitando username')    
     # set password
-    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Digitando password')
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Error >> Digitando password')
 
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Click no submit do login')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Error >> Click no submit do login')
 
     #fechando modal/iframe email secundario
     closeModalEmail(driver, By.XPATH)
@@ -63,30 +63,34 @@ def toBet(bet):
     closeModalIdenty(driver, By.XPATH)
     
     #fechando modal de aviso de novas mensagens
-    findAndclick(driver, By.XPATH, '/html/body/div[6]/div[4]', 'Click no fechar da modal de mensagens novas')
+    findAndclick(driver, By.XPATH, '/html/body/div[6]/div[4]', 'Error >> Click no fechar da modal de mensagens novas')
 
     #clicando na lupa para digitar a aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Click na lupa para digitar a aposta')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Error >> Click na lupa para digitar a aposta')
     
     #input de busca da aposta
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "sml-SearchTextInput")] ', bet.pesquisa, 'inserindo termo de busca da aposta')
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta')
     
     #clicando na aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Click na aposta')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
     
     
     #clicando no valor da aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Click no valor da aposta')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
     
     #inserindo o valor da aposta
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'inserindo valor da aposta')
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'inserindo valor da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'Error >> inserindo valor da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta')
     
     #clicando em fazer aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Fazendo aposta')
-    time.sleep(2) # sleep for 2 second
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta')
 
     driver.quit()
+    time.sleep(2) # sleep for 2 second
+    return True
+  except:
+    return False
+
 
 def teste():
   print('aaaaaa')
