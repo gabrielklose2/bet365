@@ -37,7 +37,7 @@ class Conta1:
     return self.valor
 
   def setAuthentication(self):
-    f=open(os.path.abspath('./conta2')+"/account.txt","r")
+    f=open(os.path.dirname(os.path.realpath(__file__))+"/account.txt","r")
     lines=f.readlines()
     # username=lines[0]
     # password=lines[1]
@@ -66,8 +66,3 @@ for row in csvreader:
   Bet.setValor(valor_aposta.strip())
   toBet(Bet)
 file.close()
-
-# Bet = Conta1()
-# Bet.setAuthentication()
-# Bet.setBet()
-# toBet(Bet)
