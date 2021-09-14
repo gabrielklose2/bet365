@@ -12,6 +12,7 @@ def findAndclick(dri,by, paramBy, error):
 
 def findAndInputData(dri,by, paramBy, data, error):
   try: 
+    print('findAndInputData > '+data)
     time.sleep(2) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.send_keys(data)
@@ -26,6 +27,7 @@ def closeModalIdenty(driver, by):
 
     driver.switch_to.default_content()
   except:
+    driver.switch_to.default_content()
     print("closeModalIdenty >>> error")
 
 def closeModalEmail(driver, by):
@@ -36,23 +38,23 @@ def closeModalEmail(driver, by):
 
     driver.switch_to.default_content()
   except:
+    driver.switch_to.default_content()
     print("closeModalEmail >>> error")
 
-def apostar(username, password, value):
+def toBet(bet):
   driver = uc.Chrome()
   with driver:
+
     driver.get('https://www.bet365.com') 
     time.sleep(3) # sleep for 3 second
     findAndclick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Click no botão login')
 
     # set username
-    findAndInputData(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div/div[2]/input', username, 'Digitando username')
-    
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Digitando username')    
     # set password
-    findAndInputData(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div/div[3]/input', password, 'Digitando password')
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Digitando password')
 
-
-    findAndclick(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div/div[4]/div', 'Click no submit do login')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Click no submit do login')
 
     #fechando modal/iframe email secundario
     closeModalEmail(driver, By.XPATH)
@@ -64,10 +66,10 @@ def apostar(username, password, value):
     findAndclick(driver, By.XPATH, '/html/body/div[6]/div[4]', 'Click no fechar da modal de mensagens novas')
 
     #clicando na lupa para digitar a aposta
-    findAndclick(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[3]/div[4]/div[1]/div', 'Click na lupa para digitar a aposta')
+    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Click na lupa para digitar a aposta')
     
     #input de busca da aposta
-    findAndInputData(driver, By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[3]/div[2]/input', 'Tupelo Honey', 'inserindo termo de busca da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "sml-SearchTextInput")] ', bet.pesquisa, 'inserindo termo de busca da aposta')
     
     #clicando na aposta
     findAndclick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Click na aposta')
@@ -77,12 +79,14 @@ def apostar(username, password, value):
     findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Click no valor da aposta')
     
     #inserindo o valor da aposta
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', value, 'inserindo valor da aposta')
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', value, 'inserindo valor da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'inserindo valor da aposta')
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'inserindo valor da aposta')
     
     #clicando em fazer aposta
     findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Fazendo aposta')
     time.sleep(2) # sleep for 2 second
+
+    driver.quit()
 
 def teste():
   print('aaaaaa')
