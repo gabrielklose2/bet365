@@ -1,2 +1,1 @@
-python3 pr1.py &
-python3 pr2.py & 
+python3 conta1/index.py & python3 conta2/index.py & python3 conta3/index.py &

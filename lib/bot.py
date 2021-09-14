@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 def findAndclick(dri,by, paramBy, error):
   try: 
-    time.sleep(2) # sleep for 2 second
+    time.sleep(1) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.click()
   except:
@@ -13,7 +13,7 @@ def findAndclick(dri,by, paramBy, error):
 def findAndInputData(dri,by, paramBy, data, error):
   try: 
     print('findAndInputData > '+data)
-    time.sleep(2) # sleep for 2 second
+    time.sleep(1) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.send_keys(data)
   except:
@@ -21,7 +21,7 @@ def findAndInputData(dri,by, paramBy, data, error):
 
 def closeModalIdenty(driver, by):
   try: 
-    time.sleep(10) # sleep for 10 second
+    time.sleep(5) # sleep for 10 second
     driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
     driver.find_element(by, '//*[@id="remindLater"]').click()
 
@@ -84,9 +84,8 @@ def toBet(bet):
     
     #clicando em fazer aposta
     findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta')
-
+    # print('aposta feita')
     driver.quit()
-    time.sleep(2) # sleep for 2 second
     return True
   except:
     return False
