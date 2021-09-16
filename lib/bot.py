@@ -5,26 +5,24 @@ from selenium.webdriver.common.by import By
 
 def findAndclick(dri,by, paramBy, error, final_bet = False, user = '', bet = ''):
   try: 
-    time.sleep(1) # sleep for 2 second
+    time.sleep(0.5) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.click()
     if(final_bet):
       file = open(os.path.abspath("")+"/log.txt", "w")
       file.write("Success : "+ user + " - " + bet + "\n")
-      time.sleep(1)
       file.close()
   except:
     if(final_bet):
       file = open(os.path.abspath("")+"/log.txt", "w")
       file.write("Error : "+ user + " - " + bet + "\n")
-      time.sleep(1)
       file.close()
     print(error)
 
 def findAndInputData(dri,by, paramBy, data, error):
   try: 
     print('findAndInputData > '+data)
-    time.sleep(1) # sleep for 2 second
+    time.sleep(0.1) # sleep for 2 second
     element = dri.find_element(by, paramBy)
     element.send_keys(data)
   except:
@@ -32,7 +30,7 @@ def findAndInputData(dri,by, paramBy, data, error):
 
 def closeModalIdenty(driver, by):
   try: 
-    time.sleep(5) # sleep for 10 second
+    time.sleep(1) # sleep for 10 second
     driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
     driver.find_element(by, '//*[@id="remindLater"]').click()
 
@@ -43,7 +41,7 @@ def closeModalIdenty(driver, by):
 
 def closeModalEmail(driver, by):
   try: 
-    time.sleep(10) # sleep for 10 second
+    time.sleep(5) # sleep for 10 second
     driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
     driver.find_element(by, '//*[@id="RemindMeLater"]').click()
 
@@ -57,7 +55,7 @@ def toBet(bet):
   try:
 
     driver.get('https://www.bet365.com/#/HO/') 
-    time.sleep(3) # sleep for 3 second
+    time.sleep(1) # sleep for 3 second
     findAndclick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
 
     # set username
@@ -100,8 +98,8 @@ def toBet(bet):
     # findAndclick(driver, By.XPATH, '//div[contains(@class, "ul-MembersLinkButton_Text")]', 'Error >> Click no perfil')
     
     #clicando em fazer aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
-    # print('aposta feita')
+    # findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    print('aposta feita')
     driver.quit()
     return True
   except:
