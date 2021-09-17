@@ -1,37 +1,88 @@
 import time
 import os
-import undetected_chromedriver.v2 as uc
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-def findAndclick(dri,by, paramBy, error, final_bet = False, user = '', bet = ''):
+
+def elementExist(driver, by, paramBy, timer = 1):
+  try:
+    element_present = EC.presence_of_element_located((by, paramBy))
+    WebDriverWait(driver, timer).until(element_present)
+    return True
+  except:
+    return False
+
+def handleElement(dri,by, paramBy, tentativas = 3):
+  exists = elementExist(dri,by, paramBy)
+  print("paramBy < " + str(paramBy))
+  print("fora do while < " + str(exists))
+  count = 0
+  while (not exists and count < tentativas):
+    count += 1
+    exists = elementExist(dri,by, paramBy)
+    print("dentro do while > " + str(exists))
+  
+  return exists
+
+def runBet(dri,by, bet):
+  exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
+  count = 0
+  while (not exists and count < 6):
+    count += 1
+    findAndClick(dri, by, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
+  
+
+def findAndClick(dri,by, paramBy, error, final_bet = False, user = '', bet = '', timer = 0):
   try: 
-    time.sleep(0.5) # sleep for 2 second
+    time.sleep(timer) # sleep for 3 second
+    if(not handleElement(dri,by, paramBy)):
+      raise Exception("Error!")
     element = dri.find_element(by, paramBy)
     element.click()
     if(final_bet):
-      file = open(os.path.abspath("")+"/log.txt", "w")
+      file = open(os.path.abspath("")+"/log.txt", "a")
       file.write("Success : "+ user + " - " + bet + "\n")
       file.close()
   except:
     if(final_bet):
-      file = open(os.path.abspath("")+"/log.txt", "w")
+      file = open(os.path.abspath("")+"/log.txt", "a")
       file.write("Error : "+ user + " - " + bet + "\n")
       file.close()
     print(error)
 
-def findAndInputData(dri,by, paramBy, data, error):
+
+def findAndInputData(dri,by, paramBy, data, error, refresh = False):
   try: 
-    print('findAndInputData > '+data)
-    time.sleep(0.1) # sleep for 2 second
+    if(not handleElement(dri,by, paramBy)):
+      raise Exception("Error!")
+
     element = dri.find_element(by, paramBy)
     element.send_keys(data)
+    if(refresh):
+      time.sleep(1.5)
+      # dri.refresh()
+  except:
+    print(error)
+
+def findAndClearData(dri,by, paramBy, error):
+  try: 
+    if(not handleElement(dri,by, paramBy)):
+      raise Exception("Error!")
+    element = dri.find_element(by, paramBy)
+    element.clear()
   except:
     print(error)
 
 def closeModalIdenty(driver, by):
   try: 
-    time.sleep(1) # sleep for 10 second
+    if(not handleElement(driver,by, "/html/body/div[4]/iframe")):
+      raise Exception("Error!")
     driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
+    
+    if(not handleElement(driver,by, '//*[@id="remindLater"]')):
+      raise Exception("Error!")
     driver.find_element(by, '//*[@id="remindLater"]').click()
 
     driver.switch_to.default_content()
@@ -41,8 +92,12 @@ def closeModalIdenty(driver, by):
 
 def closeModalEmail(driver, by):
   try: 
-    time.sleep(5) # sleep for 10 second
+    if(not handleElement(driver,by, "/html/body/div[4]/iframe", 1)):
+      raise Exception("Error!")
     driver.switch_to.frame(driver.find_element(by, "/html/body/div[4]/iframe"))
+    
+    if(not handleElement(driver,by, '//*[@id="RemindMeLater"]'), 2):
+      raise Exception("Error!")
     driver.find_element(by, '//*[@id="RemindMeLater"]').click()
 
     driver.switch_to.default_content()
@@ -50,20 +105,19 @@ def closeModalEmail(driver, by):
     driver.switch_to.default_content()
     print("closeModalEmail >>> error")
 
-def toBet(bet):
-  driver = uc.Chrome()
+def toBetFirst(bet, driver):
   try:
 
     driver.get('https://www.bet365.com/#/HO/') 
-    time.sleep(1) # sleep for 3 second
-    findAndclick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
+    time.sleep(3) # sleep for 3 second
+    findAndClick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
 
     # set username
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Error >> Digitando username')    
     # set password
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Error >> Digitando password')
 
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Error >> Click no submit do login')
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Error >> Click no submit do login')
 
     #fechando modal/iframe email secundario
     closeModalEmail(driver, By.XPATH)
@@ -72,36 +126,70 @@ def toBet(bet):
     closeModalIdenty(driver, By.XPATH)
     
     #fechando modal de aviso de novas mensagens
-    findAndclick(driver, By.XPATH, '/html/body/div[6]/div[4]', 'Error >> Click no fechar da modal de mensagens novas')
+    findAndClick(driver, By.XPATH, '/html/body/div[6]/div[4]', 'Error >> Click no fechar da modal de mensagens novas')
 
     #clicando na lupa para digitar a aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Error >> Click na lupa para digitar a aposta')
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Error >> Click na lupa para digitar a aposta')
     
     #input de busca da aposta
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta')
     
     #clicando na aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
     
     
     #clicando no valor da aposta
-    findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
     
     #inserindo o valor da aposta
-    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-hidden")]', bet.valor, 'Error >> inserindo valor da aposta1')
     findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta2')
     
-    # #clicando no icone de perfil
-    # findAndclick(driver, By.XPATH, '//div[contains(@class, "hm-MainHeaderMembersWide_MembersMenuIcon")]', 'Error >> Click no perfil')
-    
-    # #logout
-    # findAndclick(driver, By.XPATH, '//div[contains(@class, "ul-MembersLinkButton_Text")]', 'Error >> Click no perfil')
-    
     #clicando em fazer aposta
-    # findAndclick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
-    print('aposta feita')
-    driver.quit()
+    # findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    runBet(driver,By.XPATH, bet)
     return True
   except:
-    driver.quit()
+    # driver.quit()
+    return False
+
+def toBetRemaining(bet, driver):
+  try:
+    time.sleep(2)
+    #verificado se a aposta foi feita
+    # if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):
+    #   findAndClick(driver, By.XPATH, '//div[contains(@class, "bs-DeleteButton bs-DeleteButton_MouseMode")]', 'Error >> Fechando modal de aposta',)
+
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-QuickBetHeader_DoneButton")]', 'Error >> click em terminar aposta')
+      
+    #clicando na lupa para digitar a aposta
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Error >> Click na lupa para digitar a aposta')
+
+    findAndClearData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', 'Error >> limpando imput de busca da aposta')
+    
+    #input de busca da aposta
+    findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta', True)
+    
+    #clicando na aposta
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta', 1)
+    
+    
+    #clicando no valor da aposta
+    findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
+    
+    #inserindo o valor da aposta
+    findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta2')
+    
+    #clicando em fazer aposta
+    # findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-PlaceBetButton_Wrapper")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    
+    #verificando se a aposta foi feita para clicar novamente
+    # if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):
+    #   findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-PlaceBetButton_Wrapper")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+    runBet(driver,By.XPATH, bet)
+    #verificando se a aposta foi feita
+    if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):
+      findAndClick(driver, By.XPATH, '//div[contains(@class, "bs-DeleteButton bs-DeleteButton_MouseMode")]', 'Error >> Fechando modal de aposta',)
+    time.sleep(2)
+  except:
+    # driver.quit()
     return False

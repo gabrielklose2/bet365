@@ -3,6 +3,7 @@ import os
 import csv
 import unicodedata
 import re
+import undetected_chromedriver.v2 as uc
 sys.path.append(os.path.abspath('./lib'))
 from bot import *
 
@@ -56,13 +57,20 @@ class Conta1:
 
 file = open(os.path.abspath("")+"/cavalos.csv")
 csvreader = csv.reader(file)
+i = 0
+driver = uc.Chrome()
 for row in csvreader:
   Bet = Conta1()
   array = row[0].split(';',1)
   cavalo = Bet.removeCaracterEspecial(array[0])
-  valor_aposta = Bet.removeCaracterEspecial(array[1])
+  valor_aposta = array[1]
   Bet.setAuthentication()
   Bet.setCavalo(cavalo.strip())
   Bet.setValor(valor_aposta.strip())
-  toBet(Bet)
+  if(i == 0):
+    toBetFirst(Bet, driver)
+  else:
+    toBetRemaining(Bet, driver)
+  i += 1
+  print('______________________________________________________')
 file.close()
