@@ -4,7 +4,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
+def registerLog(message, user, bet):
+  try:
+    file = open(os.path.abspath("")+"/log.txt", "a")
+    file.write(message+": "+ user + " - " + bet + "\n")
+    file.close()
+  except:
+    print('registerLog >>> Error')
 def elementExist(driver, by, paramBy, timer = 1):
   try:
     element_present = EC.presence_of_element_located((by, paramBy))
@@ -26,13 +32,16 @@ def handleElement(dri,by, paramBy, tentativas = 3):
   return exists
 
 def runBet(dri,by, bet):
-  exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
-  count = 0
-  while (not exists and count < 6):
-    count += 1
-    findAndClick(dri, by, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+  try:
     exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
-  
+    count = 0
+    while (not exists and count < 6):
+      count += 1
+      findAndClick(dri, by, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
+      exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
+    return True
+  except:
+    return False
 
 def findAndClick(dri,by, paramBy, error, final_bet = False, user = '', bet = '', timer = 0):
   try: 
@@ -45,12 +54,14 @@ def findAndClick(dri,by, paramBy, error, final_bet = False, user = '', bet = '',
       file = open(os.path.abspath("")+"/log.txt", "a")
       file.write("Success : "+ user + " - " + bet + "\n")
       file.close()
+    return True
   except:
     if(final_bet):
       file = open(os.path.abspath("")+"/log.txt", "a")
       file.write("Error : "+ user + " - " + bet + "\n")
       file.close()
     print(error)
+    return False
 
 
 def findAndInputData(dri,by, paramBy, data, error, refresh = False):
@@ -63,8 +74,10 @@ def findAndInputData(dri,by, paramBy, data, error, refresh = False):
     if(refresh):
       time.sleep(1.5)
       # dri.refresh()
+    return True
   except:
     print(error)
+    return False
 
 def findAndClearData(dri,by, paramBy, error):
   try: 
@@ -72,8 +85,10 @@ def findAndClearData(dri,by, paramBy, error):
       raise Exception("Error!")
     element = dri.find_element(by, paramBy)
     element.clear()
+    return True
   except:
     print(error)
+    return False
 
 def closeModalIdenty(driver, by):
   try: 
@@ -135,8 +150,10 @@ def toBetFirst(bet, driver):
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta')
     
     #clicando na aposta
-    findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
-    
+    success = findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+    if(not success):
+      registerLog("Error", bet.username, bet.cavalo)
+      return False
     
     #clicando no valor da aposta
     findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
@@ -160,31 +177,28 @@ def toBetRemaining(bet, driver):
     #   findAndClick(driver, By.XPATH, '//div[contains(@class, "bs-DeleteButton bs-DeleteButton_MouseMode")]', 'Error >> Fechando modal de aposta',)
 
     findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-QuickBetHeader_DoneButton")]', 'Error >> click em terminar aposta')
-      
+    
     #clicando na lupa para digitar a aposta
     findAndClick(driver, By.XPATH, '//div[contains(@class, "hm-SiteSearchIconLoggedIn_Icon")]', 'Error >> Click na lupa para digitar a aposta')
-
-    findAndClearData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', 'Error >> limpando imput de busca da aposta')
     
+    findAndClearData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', 'Error >> limpando input de busca da aposta')
+
     #input de busca da aposta
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta', True)
-    
+
     #clicando na aposta
-    findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta', 1)
-    
-    
+    success = findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta', 1)
+    if(not success):
+      registerLog("Error", bet.username, bet.cavalo)
+      return False
+
     #clicando no valor da aposta
     findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
-    
+
     #inserindo o valor da aposta
     findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta2')
-    
+      
     #clicando em fazer aposta
-    # findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-PlaceBetButton_Wrapper")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
-    
-    #verificando se a aposta foi feita para clicar novamente
-    # if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):
-    #   findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-PlaceBetButton_Wrapper")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
     runBet(driver,By.XPATH, bet)
     #verificando se a aposta foi feita
     if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):

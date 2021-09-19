@@ -6,6 +6,7 @@ import re
 import undetected_chromedriver.v2 as uc
 sys.path.append(os.path.abspath('./lib'))
 from bot import *
+# from getHorses import *
 
 class Conta1:
   username = ""
@@ -55,15 +56,15 @@ class Conta1:
     # Usa expressão regular para retornar a palavra apenas com números, letras e espaço
     return re.sub('[^a-zA-Z0-9 \\\]', '', palavraSemAcento)
 
+# get()
 file = open(os.path.abspath("")+"/cavalos.csv")
 csvreader = csv.reader(file)
 i = 0
 driver = uc.Chrome()
 for row in csvreader:
   Bet = Conta1()
-  array = row[0].split(';',1)
-  cavalo = Bet.removeCaracterEspecial(array[0])
-  valor_aposta = array[1]
+  cavalo = Bet.removeCaracterEspecial(row[0])
+  valor_aposta = row[1]
   Bet.setAuthentication()
   Bet.setCavalo(cavalo.strip())
   Bet.setValor(valor_aposta.strip())
