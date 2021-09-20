@@ -48,10 +48,17 @@ def get():
   file = open(os.path.abspath("")+"/cavalos.csv", "w", encoding='UTF8')
   writer = csv.writer(file)
   for element in driver.find_elements(By.XPATH, '//tip-card[@followbuttonclickid="click:follow_button_tips_active"]'):
-    stake = element.find_element(By.XPATH, '//p[contains(@class,"bg-primary-light-6 border-t text-sm text-center border-grey-light-3")]//span[contains(@class,"block lg:inline lg:mr-6 lg:w-auto w-p50")][3]').text
+    stake = element.find_element(By.XPATH, './/span[contains(@class,"block lg:inline lg:mr-6 lg:w-auto w-p50")][3]').text
     stake = stake.replace("Stake:", "")
     stake = stake.strip()
     print(stake)
+    valor = 0.5
+    if int(stake) == 1:
+      valor = 0.5
+    elif int(stake) == 2:
+      valor = 0.6
+    else:
+      valor = 0.7
 
     corrida = element.find_element(By.XPATH, './/span[contains(@class,"block w-full truncate text-lg")]').text
     corrida = corrida[6:]
@@ -63,7 +70,7 @@ def get():
     cavalo = cavalo[1:]
     print(cavalo)
 
-    writer.writerow([cavalo+" "+corrida, 0.5])
+    writer.writerow([cavalo+" "+corrida, valor])
 
     print('____________________________________')
 
