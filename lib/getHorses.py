@@ -69,8 +69,8 @@ def get():
     cavalo = cavalo.replace("Each way", "")
     cavalo = cavalo[1:]
     print(cavalo)
-
-    writer.writerow([cavalo+" "+corrida, valor])
+    if(cavalo.strip()):
+      writer.writerow([cavalo+" "+corrida, valor])
 
     print('____________________________________')
 
