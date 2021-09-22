@@ -120,20 +120,36 @@ def closeModalEmail(driver, by):
     driver.switch_to.default_content()
     print("closeModalEmail >>> error")
 
+def runLogin(dri,bet):
+  try:
+    time.sleep(1)
+    exists = True
+    count = 0
+    while (exists and count < 4):
+      count += 1
+      time.sleep(3)
+      findAndClick(dri,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
+      # set username
+      findAndInputData(dri, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Error >> Digitando username')    
+      # set password
+      findAndInputData(dri, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Error >> Digitando password')
+
+      findAndClick(dri, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Error >> Click no submit do login')
+      time.sleep(3)
+      exists = elementExist(dri,By.XPATH, '//*[contains(@class, "lmd-LoginModuleDefault_FailedLogin")]')
+      if(exists):
+        dri.refresh()
+    return exists
+  except:
+    return False
+
 def toBetFirst(bet, driver):
   try:
 
     driver.get('https://www.bet365.com/#/HO/') 
+    time.sleep(2) # sleep for 3 second
+    runLogin(driver, bet)
     time.sleep(3) # sleep for 3 second
-    findAndClick(driver,By.XPATH, '/html/body/div[1]/div/div[3]/div[1]/div/div[2]/div[4]/div[3]/div', 'Error >> Click no botão login')
-
-    # set username
-    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Username")]', bet.username, 'Error >> Digitando username')    
-    # set password
-    findAndInputData(driver, By.XPATH, '//*[contains(@class, "lms-StandardLogin_Password")]', bet.password, 'Error >> Digitando password')
-
-    findAndClick(driver, By.XPATH, '//div[contains(@class, "lms-StandardLogin_LoginButton")]', 'Error >> Click no submit do login')
-
     #fechando modal/iframe email secundario
     closeModalEmail(driver, By.XPATH)
     
@@ -175,7 +191,6 @@ def toBetRemaining(bet, driver):
     #verificado se a aposta foi feita
     # if(not elementExist(driver, By.XPATH, '//div[contains(string(), "Aposta Feita")]', 2)):
     #   findAndClick(driver, By.XPATH, '//div[contains(@class, "bs-DeleteButton bs-DeleteButton_MouseMode")]', 'Error >> Fechando modal de aposta',)
-
     findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-QuickBetHeader_DoneButton")]', 'Error >> click em terminar aposta')
     
     #clicando na lupa para digitar a aposta
