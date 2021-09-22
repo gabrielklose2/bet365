@@ -35,7 +35,7 @@ def runBet(dri,by, bet):
   try:
     exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
     count = 0
-    while (not exists and count < 6):
+    while (not exists and count < 4):
       count += 1
       findAndClick(dri, by, '//div[contains(@class, "qbs-BetPlacement")]', 'Error >> Fazendo aposta', True, bet.username, bet.cavalo)
       exists = elementExist(dri,by, '//div[contains(string(), "Aposta Feita")]')
