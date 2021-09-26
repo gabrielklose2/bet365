@@ -148,12 +148,13 @@ def clickAposta(dri, bet):
     exists = False
     count = 0
     while (not exists and count < 3):
-      count += 1
-      findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+      findAndClick(dri, By.XPATH, '//*[contains(@class, "ssm-SiteSearchBetOnlyParticipant gl-Participant_General gl-Market_General-cn2")]', 'Error >> Click na aposta')
+      time.sleep(0.6)
       exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
       if(not exists):
         dri.refresh()
       time.sleep(1)
+      count += 1
     return exists
   except:
     return False
@@ -189,7 +190,7 @@ def toBetFirst(bet, driver):
       return False
     
     #clicando no valor da aposta
-    findAndClick(driver, By.XPATH, '//div[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
+    findAndClick(driver, By.XPATH, '//*[contains(@class, "qbs-EachWayStakeBox qbs-StakeBox qbs-StakeBox_MouseMode qbs-StakeBox_Empty qbs-StakeBox_Width410")]', 'Error >> Click no valor da aposta')
     
     #inserindo o valor da aposta
     findAndInputData(driver, By.XPATH, '//div[contains(@class, "qbs-StakeBox_StakeValue-input")]', bet.valor, 'Error >> inserindo valor da aposta2')
