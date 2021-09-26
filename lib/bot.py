@@ -143,6 +143,30 @@ def runLogin(dri,bet):
   except:
     return False
 
+def clickAposta(dri, bet):
+  try:
+    exists = False
+    count = 0
+    success = findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+    if(not success):
+      registerLog("Error", bet.username, bet.cavalo)
+      return False
+
+    exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
+    while (not exists and count < 3):
+      count += 1
+      if(not exists):
+        dri.refresh()
+      time.sleep(2)
+      success = findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+      if(not success):
+        registerLog("Error", bet.username, bet.cavalo)
+        return False
+      exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
+    return exists
+  except:
+    return False
+
 def toBetFirst(bet, driver):
   try:
 
@@ -166,9 +190,11 @@ def toBetFirst(bet, driver):
     findAndInputData(driver, By.XPATH, '//*[contains(@class, "sml-SearchTextInput")] ', bet.cavalo, 'Error >> inserindo termo de busca da aposta')
     
     #clicando na aposta
-    success = findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
-    if(not success):
-      registerLog("Error", bet.username, bet.cavalo)
+    # success = findAndClick(driver, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+    # if(not success):
+    #   registerLog("Error", bet.username, bet.cavalo)
+    #   return False
+    if(not clickAposta(driver, bet)): 
       return False
     
     #clicando no valor da aposta

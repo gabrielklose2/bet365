@@ -1,1 +1,1 @@
-python conta1/index.py & python conta2/index.py & python conta3/index.py & python conta4/index.py &
+python3 conta1/index.py & python3 conta2/index.py & python3 conta3/index.py & python3 conta4/index.py &

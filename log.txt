@@ -1,0 +1,44 @@
+Success : jaianeDAS - Knighted
+Success : terezaLA - Knighted
+Success : jaianeDAS - Knighted
+Success : gabiAmerican - Knighted
+Success :  - 
+Success :  - 
+Success :  - 
+Success : terezaLA - Autocratic
+Success : jaianeDAS - Autocratic
+Success : terezaLA - Autocratic
+Success : jaianeDAS - Autocratic
+Success : gabiAmerican - Autocratic
+Success : gabiAmerican - Autocratic
+Success :  - 
+Success :  - 
+Success :  - 
+Success : terezaLA - Janiessweetmelissa
+Success : jaianeDAS - Janiessweetmelissa
+Success : jaianeDAS - Janiessweetmelissa
+Success : gabiAmerican - Janiessweetmelissa
+Success : jaianeDAS - Bush Mills Billy vitoria fixa
+Success : gabiAmerican - Bush Mills Billy vitoria fixa
+Success : gabiAmerican - Bush Mills Billy vitoria fixa
+Success :  - 
+Error: PauloAF3 - Bush Mills Billy vitoria fixa
+Success :  - 
+Success : jaianeDAS - Jimilicious vitoria fixa
+Success : jaianeDAS - Jimilicious vitoria fixa
+Success : gabiAmerican - Jimilicious vitoria fixa
+Success : gabiAmerican - Jimilicious vitoria fixa
+Success :  - 
+Success :  - 
+Success : jaianeDAS - House Of Cards vitoria fixa
+Error :  - 
+Error: PauloAF3 - Jimilicious vitoria fixa
+Success : gabiAmerican - House Of Cards vitoria fixa
+Success : gabiAmerican - House Of Cards vitoria fixa
+Error: terezaLA - Bush Mills Billy vitoria fixa
+Error :  - 
+Error: terezaLA - Jimilicious vitoria fixa
+Error :  - 
+Error: PauloAF3 - House Of Cards vitoria fixa
+Error :  - 
+Error: terezaLA - House Of Cards vitoria fixa
