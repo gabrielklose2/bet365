@@ -45,7 +45,7 @@ def get():
   driver.refresh()
   sleep(2.5)
   # open the file in the write mode
-  file = open(os.path.abspath("")+"/cavalos.csv", "w", encoding='UTF8')
+  file = open(os.path.abspath("")+"/cavalos.csv", "w", encoding='UTF8', newline='')
   writer = csv.writer(file)
   for element in driver.find_elements(By.XPATH, '//tip-card[@followbuttonclickid="click:follow_button_tips_active"]'):
     stake = element.find_element(By.XPATH, './/span[contains(@class,"block lg:inline lg:mr-6 lg:w-auto w-p50")][3]').text
