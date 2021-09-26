@@ -147,22 +147,13 @@ def clickAposta(dri, bet):
   try:
     exists = False
     count = 0
-    success = findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
-    if(not success):
-      registerLog("Error", bet.username, bet.cavalo)
-      return False
-
-    exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
     while (not exists and count < 3):
       count += 1
+      findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
+      exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
       if(not exists):
         dri.refresh()
-      time.sleep(2)
-      success = findAndClick(dri, By.XPATH, '//div[contains(@class, "ssm-SiteSearchBetOnlyParticipant_Name")]', 'Error >> Click na aposta')
-      if(not success):
-        registerLog("Error", bet.username, bet.cavalo)
-        return False
-      exists = elementExist(dri,By.XPATH, '//*[contains(@class, "qbs-EwexBetItem qbs-NormalBetItem")]')
+      time.sleep(1)
     return exists
   except:
     return False
