@@ -57,10 +57,15 @@ class Conta1:
     return re.sub('[^a-zA-Z0-9 \\\]', '', palavraSemAcento)
 
 # get()
+
+pc = 1
 file = open(os.path.abspath("")+"/cavalos.csv")
 csvreader = csv.reader(file)
 i = 0
-driver = uc.Chrome()
+if(pc == 2):
+  driver = uc.Chrome()
+else:
+  driver = uc.Chrome(executable_path=r'C:/Users/joao_/AppData/Local/Programs/Python/Python39/chromedriver.exe')
 for row in csvreader:
   Bet = Conta1()
   cavalo = Bet.removeCaracterEspecial(row[0])

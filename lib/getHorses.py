@@ -25,7 +25,7 @@ def findAndInputData(dri,by, paramBy, data, error, refresh = False):
 def get():
   # create webdriver object
   driver = webdriver.Chrome()
-    
+  driver.maximize_window()
   # get the website
   driver.get("https://tipstrr.com/tipster/usvaluetippertelegram/tips")
     
